@@ -1,7 +1,11 @@
-#include "GameComponent.h"
+#ifndef COMMAND_H
+#define COMMAND_H
 
-class Command : public GameComponent
+class Command
 {
 public:
-    Command(GameComponent *parent);
+    Command();
+    virtual ~Command();
 };
+
+#endif
