@@ -28,6 +28,7 @@ void Render::initRender()
     Avatar *avatar = game->getAvatar();
     std::vector<Wall *> walls = game->getWalls();
     std::vector<Obstacle *> obstacles = game->getObstacles();
+    std::vector<Goal *> goals = game->getGoals();
 
     // Setting the avatar
     currentFrameBuffer[avatar->getCurrentX() - 1][avatar->getCurrentY() - 1] = avatar->getCharacter();
@@ -36,6 +37,12 @@ void Render::initRender()
     for (auto &wall : walls)
     {
         currentFrameBuffer[wall->getX() - 1][wall->getY() - 1] = wall->getCharacter();
+    }
+
+    // Setting the goals
+    for (auto &goal : goals)
+    {
+        currentFrameBuffer[goal->getX() - 1][goal->getY() - 1] = goal->getCharacter();
     }
 
     // Setting the Obstacles
@@ -59,6 +66,7 @@ void Render::initRender()
     char avatarChar = avatar->getCharacter();
     char obsChar = obstacles.front()->getCharacter();
     char wallChar = walls.front()->getCharacter();
+    char goalChar = goals.front()->getCharacter();
 
     isLogoFullyLit = true;
 
@@ -76,10 +84,26 @@ void Render::initRender()
             else if (currentFrameBuffer[i][j] == obsChar)
             {
                 std::cout << obstacles.front()->getColor();
+                // Check to see if it's in place, if so the color should be green
+                for (auto &obs : obstacles)
+                {
+                    if (i + 1 == obs->getX() && j + 1 == obs->getY())
+                    {
+                        if (obs->getIsInPlace())
+                        {
+                            std::cout << BRIGHTGREEN;
+                        }
+                        break;
+                    }
+                }
             }
             else if (currentFrameBuffer[i][j] == wallChar)
             {
                 std::cout << walls.front()->getColor();
+            }
+            else if (currentFrameBuffer[i][j] == goalChar)
+            {
+                std::cout << goals.front()->getColor();
             }
 
             std::cout << currentFrameBuffer[i][j];
@@ -91,7 +115,7 @@ void Render::initRender()
     }
 
     std::cout << "Use " << BRIGHTRED << "ARROW KEYS" << RESET << " to move, " << BRIGHTRED << "U" << RESET << " to undo a move, " BRIGHTRED << "Q" << RESET << " to exit.\n";
-    std::cout << "Deliver each " << obstacles.front()->getColor() << obsChar << RESET << " to a " << BRIGHTCYAN << "BLAH" << RESET << " to win!";
+    std::cout << "Deliver each " << obstacles.front()->getColor() << obsChar << RESET << " to a " << goals.front()->getColor() << goalChar << RESET << " to win!";
 }
 
 void Render::printLogo()
@@ -100,26 +124,26 @@ void Render::printLogo()
     if (isLogoFullyLit)
     {
         std::cout << BRIGHTYELLOW << "____     _ _    __                  _ \n"
-                                  << "|  _  \\   | (_)                    | |\n"
-                                  << "| | | |___| |___   _____ _ __ _   _| |\n"
-                                  << "| | | / _ \\ | \\ \\ / / _ \\ '__| | | | |\n"
-                                  << "| |/ /  __/ | |\\ V /  __/ |  | |_| |_|\n"
-                                  << "|___/ \\___|_|_| \\_/ \\___|_|   \\__, (_)\n"
-                                  << "                               __/ |  \n"
-                                  << "                              |___/   \n"
-                                  << RESET;
+                  << "|  _  \\   | (_)                    | |\n"
+                  << "| | | |___| |___   _____ _ __ _   _| |\n"
+                  << "| | | / _ \\ | \\ \\ / / _ \\ '__| | | | |\n"
+                  << "| |/ /  __/ | |\\ V /  __/ |  | |_| |_|\n"
+                  << "|___/ \\___|_|_| \\_/ \\___|_|   \\__, (_)\n"
+                  << "                               __/ |  \n"
+                  << "                              |___/   \n"
+                  << RESET;
     }
     else
     {
         std::cout << RESET << "____     _ " << BRIGHTYELLOW << "_" << RESET << "    __                  _ \n"
-                           << "|  _  \\   " << BRIGHTYELLOW << "| (_)" << RESET << "                    | |\n"
-                           << "| | | |___" << BRIGHTYELLOW << "| |___   _____" << RESET << " _ __ _   _| |\n"
-                           << "| | | / _ \\ " << BRIGHTYELLOW << "| \\ \\ / / _ \\" << RESET << " '__| | | | |\n"
-                           << "| |/ /  __/ " << BRIGHTYELLOW << "| |\\ V /  __/" << RESET << " |  | |_| |_|\n"
-                           << "|___/ \\___" << BRIGHTYELLOW << "|_|_| \\_/ \\___|" << RESET << "_|   \\__, (_)\n"
-                           << "                               __/ |  \n"
-                           << "                              |___/   \n"
-                           << RESET;
+                  << "|  _  \\   " << BRIGHTYELLOW << "| (_)" << RESET << "                    | |\n"
+                  << "| | | |___" << BRIGHTYELLOW << "| |___   _____" << RESET << " _ __ _   _| |\n"
+                  << "| | | / _ \\ " << BRIGHTYELLOW << "| \\ \\ / / _ \\" << RESET << " '__| | | | |\n"
+                  << "| |/ /  __/ " << BRIGHTYELLOW << "| |\\ V /  __/" << RESET << " |  | |_| |_|\n"
+                  << "|___/ \\___" << BRIGHTYELLOW << "|_|_| \\_/ \\___|" << RESET << "_|   \\__, (_)\n"
+                  << "                               __/ |  \n"
+                  << "                              |___/   \n"
+                  << RESET;
     }
 }
 
@@ -141,6 +165,7 @@ void Render::updateFrameBuffer()
     Avatar *avatar = game->getAvatar();
     std::vector<Wall *> walls = game->getWalls();
     std::vector<Obstacle *> obstacles = game->getObstacles();
+    std::vector<Goal *> goals = game->getGoals();
 
     // Setting the avatar
     currentFrameBuffer[avatar->getCurrentX() - 1][avatar->getCurrentY() - 1] = avatar->getCharacter();
@@ -151,11 +176,18 @@ void Render::updateFrameBuffer()
         currentFrameBuffer[wall->getX() - 1][wall->getY() - 1] = wall->getCharacter();
     }
 
+    // Setting the goals
+    for (auto &goal : goals)
+    {
+        currentFrameBuffer[goal->getX() - 1][goal->getY() - 1] = goal->getCharacter();
+    }
+    
     // Setting the Obstacles
     for (auto &obstacle : obstacles)
     {
         currentFrameBuffer[obstacle->getX() - 1][obstacle->getY() - 1] = obstacle->getCharacter();
     }
+
 }
 
 void Render::render(clock_t time)
@@ -165,6 +197,7 @@ void Render::render(clock_t time)
     char avatarChar = game->getAvatar()->getCharacter();
     char obsChar = game->getObstacles().front()->getCharacter();
     char wallChar = game->getWalls().front()->getCharacter();
+    char goalChar = game->getGoals().front()->getCharacter();
 
     // See if the logo should blink (The logo blinks every 2 seconds)
     int diffTime = float(time - game->getCreationTime()) / CLOCKS_PER_SEC;
@@ -192,15 +225,31 @@ void Render::render(clock_t time)
                 // Set the console color appropriately
                 if (currentFrameBuffer[i][j] == avatarChar)
                 {
-                    std::cout << BRIGHTRED;
+                    std::cout << game->getAvatar()->getColor();
                 }
                 else if (currentFrameBuffer[i][j] == obsChar)
                 {
-                    std::cout << BRIGHTYELLOW;
+                    std::cout << game->getObstacles().front()->getColor();
+                    // Check to see if it's in place, if so the color should be green
+                    for (auto &obs : game->getObstacles())
+                    {
+                        if (i + 1 == obs->getX() && j + 1 == obs->getY())
+                        {
+                            if (obs->getIsInPlace())
+                            {
+                                std::cout << BRIGHTGREEN;
+                            }
+                            break;
+                        }
+                    }
                 }
                 else if (currentFrameBuffer[i][j] == wallChar)
                 {
-                    std::cout << BOLDYELLOW;
+                    std::cout << game->getWalls().front()->getColor();
+                }
+                else if (currentFrameBuffer[i][j] == goalChar)
+                {
+                    std::cout << game->getGoals().front()->getColor();
                 }
 
                 std::cout << currentFrameBuffer[i][j];

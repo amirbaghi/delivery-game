@@ -1,4 +1,5 @@
 #include "Headers/Game/Game.h"
+#include "Headers/Utils.h"
 #include "Headers/Command/MoveCommand.h"
 #include "Headers/Command/UndoCommand.h"
 
@@ -30,9 +31,19 @@ void Physics::applyPhysics(Command *command)
         // Checking if an obstacle is in front of the avatar
         for (auto it = obstacles.begin(); it != obstacles.end(); it++)
         {
+
             if ((*it)->getY() == avatar->getCurrentY() && (*it)->getX() == (avatar->getCurrentX() - 1))
             {
-                obstacle = (*it);
+                // If the obstacle is still not in its place
+                if (!((*it)->getIsInPlace()))
+                {
+                    obstacle = (*it);
+                }
+                // If the obstacle is in its place
+                else
+                {
+                    return;
+                }
             }
         }
 
@@ -70,11 +81,19 @@ void Physics::applyPhysics(Command *command)
             }
         }
 
-        // If there is no obstacle nor wall in front of the obstacle/avatar
-        // Move the avatar (and the obstacle if there is one in front of it)
+        // If there is no obstacle nor wall nor in place obstacle in front of the obstacle/avatar
+        // Move the avatar (and the obstacle (not in place) if there is one in front of it)
         if (obstacle != nullptr)
         {
             obstacle->setXandY(obstacle->getX() - 1, obstacle->getY());
+            // Check if the obstacle is in its place or not
+            for (auto &goal : game->getGoals())
+            {
+                if (obstacle->getX() == goal->getX() && obstacle->getY() == goal->getY())
+                {
+                    obstacle->setIsInPlace(true);
+                }
+            }
         }
         avatar->setCurrentXandY(avatar->getCurrentX() - 1, avatar->getCurrentY());
         break;
@@ -84,9 +103,19 @@ void Physics::applyPhysics(Command *command)
         // Checking if an obstacle is in front of the avatar
         for (auto it = obstacles.begin(); it != obstacles.end(); it++)
         {
+
             if ((*it)->getY() == avatar->getCurrentY() && (*it)->getX() == (avatar->getCurrentX() + 1))
             {
-                obstacle = (*it);
+                // If the obstacle is still not in its place
+                if (!((*it)->getIsInPlace()))
+                {
+                    obstacle = (*it);
+                }
+                // If the obstacle is in its place
+                else
+                {
+                    return;
+                }
             }
         }
 
@@ -96,7 +125,7 @@ void Physics::applyPhysics(Command *command)
             // If there is an obstacle in front of the avatar
             if (obstacle != nullptr)
             {
-                if ((*it)->getY() ==  obstacle->getY() && (*it)->getX() == (obstacle->getX() + 1))
+                if ((*it)->getY() == obstacle->getY() && (*it)->getX() == (obstacle->getX() + 1))
                 {
                     return;
                 }
@@ -124,11 +153,19 @@ void Physics::applyPhysics(Command *command)
             }
         }
 
-        // If there is no obstacle nor wall in front of the obstacle/avatar
-        // Move the avatar (and the obstacle if there is one in front of it)
+        // If there is no obstacle nor wall nor in place obstacle in front of the obstacle/avatar
+        // Move the avatar (and the obstacle (not in place) if there is one in front of it)
         if (obstacle != nullptr)
         {
             obstacle->setXandY(obstacle->getX() + 1, obstacle->getY());
+            // Check if the obstacle is in its place or not
+            for (auto &goal : game->getGoals())
+            {
+                if (obstacle->getX() == goal->getX() && obstacle->getY() == goal->getY())
+                {
+                    obstacle->setIsInPlace(true);
+                }
+            }
         }
         avatar->setCurrentXandY(avatar->getCurrentX() + 1, avatar->getCurrentY());
         break;
@@ -137,9 +174,19 @@ void Physics::applyPhysics(Command *command)
         // Checking if an obstacle is in front of the avatar
         for (auto it = obstacles.begin(); it != obstacles.end(); it++)
         {
+
             if ((*it)->getY() == (avatar->getCurrentY() + 1) && (*it)->getX() == avatar->getCurrentX())
             {
-                obstacle = (*it);
+                // If the obstacle is still not in its place
+                if (!((*it)->getIsInPlace()))
+                {
+                    obstacle = (*it);
+                }
+                // If the obstacle is in its place
+                else
+                {
+                    return;
+                }
             }
         }
 
@@ -177,11 +224,19 @@ void Physics::applyPhysics(Command *command)
             }
         }
 
-        // If there is no obstacle nor wall in front of the obstacle/avatar
-        // Move the avatar (and the obstacle if there is one in front of it)
+        // If there is no obstacle nor wall nor in place obstacle in front of the obstacle/avatar
+        // Move the avatar (and the obstacle (not in place) if there is one in front of it)
         if (obstacle != nullptr)
         {
             obstacle->setXandY(obstacle->getX(), obstacle->getY() + 1);
+            // Check if the obstacle is in its place or not
+            for (auto &goal : game->getGoals())
+            {
+                if (obstacle->getX() == goal->getX() && obstacle->getY() == goal->getY())
+                {
+                    obstacle->setIsInPlace(true);
+                }
+            }
         }
         avatar->setCurrentXandY(avatar->getCurrentX(), avatar->getCurrentY() + 1);
         break;
@@ -191,9 +246,19 @@ void Physics::applyPhysics(Command *command)
         // Checking if an obstacle is in front of the avatar
         for (auto it = obstacles.begin(); it != obstacles.end(); it++)
         {
+
             if ((*it)->getY() == (avatar->getCurrentY() - 1) && (*it)->getX() == avatar->getCurrentX())
             {
-                obstacle = (*it);
+                // If the obstacle is still not in its place
+                if (!((*it)->getIsInPlace()))
+                {
+                    obstacle = (*it);
+                }
+                // If the obstacle is in its place
+                else
+                {
+                    return;
+                }
             }
         }
 
@@ -231,11 +296,19 @@ void Physics::applyPhysics(Command *command)
             }
         }
 
-        // If there is no obstacle nor wall in front of the obstacle/avatar
-        // Move the avatar (and the obstacle if there is one in front of it)
+        // If there is no obstacle nor wall nor in place obstacle in front of the obstacle/avatar
+        // Move the avatar (and the obstacle (not in place) if there is one in front of it)
         if (obstacle != nullptr)
         {
             obstacle->setXandY(obstacle->getX(), obstacle->getY() - 1);
+            // Check if the obstacle is in its place or not
+            for (auto &goal : game->getGoals())
+            {
+                if (obstacle->getX() == goal->getX() && obstacle->getY() == goal->getY())
+                {
+                    obstacle->setIsInPlace(true);
+                }
+            }
         }
         avatar->setCurrentXandY(avatar->getCurrentX(), avatar->getCurrentY() - 1);
         break;

@@ -12,6 +12,12 @@ public:
     // X and Y setter
     void setXandY(int x, int y);
 
+    // isInPlace Setter
+    void setIsInPlace(bool isInPlace);
+
+    // isInPlace Getter
+    bool getIsInPlace();
+
     // Get X
     int getX();
 
@@ -22,6 +28,9 @@ public:
 private:
     // X and Y coordinates
     int x, y;
+
+    // Is the obstacle in a goal place
+    bool isInPlace;
 };
 
 #endif

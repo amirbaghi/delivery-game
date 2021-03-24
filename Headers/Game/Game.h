@@ -8,6 +8,7 @@
 #include "../Actor/Avatar.h"
 #include "../Actor/Field.h"
 #include "../Actor/Obstacle.h"
+#include "../Actor/Goal.h"
 #include "../Actor/Wall.h"
 #include "../Physics/Physics.h"
 #include "../Render/Render.h"
@@ -32,6 +33,9 @@ public:
 
     // Field Getter
     Field* getField();
+
+    // Goals getter
+    std::vector<Goal *> getGoals();
 
     // Creation Time Getter
     clock_t getCreationTime();
@@ -66,6 +70,9 @@ private:
 
     // Obstacles
     std::vector<Obstacle *> obstacles;
+
+    // Goals
+    std::vector<Goal *> goals;
 
     // Walls
     std::vector<Wall *> walls;

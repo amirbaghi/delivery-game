@@ -25,6 +25,11 @@ Game::~Game()
     {
         delete wall;
     }
+
+    for (auto &goal : goals)
+    {
+        delete goal;
+    }
 }
 
 Avatar *Game::getAvatar()
@@ -41,6 +46,11 @@ std::vector<Obstacle *> Game::getObstacles()
 std::vector<Wall *> Game::getWalls()
 {
     return this->walls;
+}
+
+std::vector<Goal *> Game::getGoals()
+{
+    return this->goals;
 }
 
 Field *Game::getField()
@@ -91,16 +101,61 @@ void Game::initGame()
         // Generating random coords for the obstacle and checking so that they're not equal to avatar's coords
         do
         {
-            x = 2 + (std::rand() % ((width - 1) - 2 + 1));
-            y = 2 + (std::rand() % ((height - 1) - 2 + 1));
+            x = 3 + (std::rand() % ((width - 2) - 2 + 1));
+            y = 3 + (std::rand() % ((height - 2) - 2 + 1));
 
         } while (x == avatar->getCurrentX() && y == avatar->getCurrentY());
 
         obs->setXandY(x, y);
+        obs->setIsInPlace(false);
+        
         obstacles.push_back(obs);
     }
 
     this->obstacles = obstacles;
+
+    // Initializing the goals
+    std::vector<Goal *> goals;
+
+    for (int i = 0; i < 6; i++)
+    {
+        Goal *goal = new Goal(this, startTime, 'O');
+
+        // Set Goal color
+        goal->setColor(BRIGHTCYAN);
+
+        // Generating random coords for the goal and checking so that they're not equal to avatar or another obstacle's coords
+        bool hasConflict;
+        do
+        {
+            hasConflict = false;
+            x = 2 + (std::rand() % ((width - 1) - 2 + 1));
+            y = 2 + (std::rand() % ((height - 1) - 2 + 1));
+
+            if (x == avatar->getCurrentX() && y == avatar->getCurrentY())
+            {
+                hasConflict = true;
+            }
+            else
+            {
+                for (auto &obs : obstacles)
+                {
+                    if (x == obs->getX() && y == obs->getY())
+                    {
+                        hasConflict = true;
+                        break;
+                    }
+                }
+            }
+
+        } while (hasConflict);
+
+        goal->setXandY(x, y);
+
+        goals.push_back(goal);
+    }
+
+    this->goals = goals;
 
     // Initialize the walls
     std::vector<Wall *> walls;

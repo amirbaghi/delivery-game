@@ -10,6 +10,16 @@ Obstacle::~Obstacle()
     
 }
 
+void Obstacle::setIsInPlace(bool isInPlace)
+{
+    this->isInPlace = isInPlace;
+}
+
+bool Obstacle::getIsInPlace()
+{
+    return this->isInPlace;
+}
+
 void Obstacle::setXandY(int x, int y)
 {
     this->x = x;
