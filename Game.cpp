@@ -195,6 +195,54 @@ void Game::initGame()
         walls.push_back(wall2);
     }
 
+    // Add some randomized walls as well
+    for (int i = 0; i < 12; i++)
+    {
+        Wall *wall = new Wall(this, startTime, '@');
+        wall->setColor(BOLDYELLOW);
+
+        bool hasConflict;
+        do
+        {
+            hasConflict = false;
+            x = 2 + (std::rand() % ((width - 1) - 2 + 1));
+            y = 2 + (std::rand() % ((height - 1) - 2 + 1));
+
+            if (x == avatar->getCurrentX() && y == avatar->getCurrentY())
+            {
+                hasConflict = true;
+            }
+            else
+            {
+                for (auto &obs : obstacles)
+                {
+                    if (x == obs->getX() && y == obs->getY())
+                    {
+                        hasConflict = true;
+                        break;
+                    }
+                }
+
+                if (!hasConflict)
+                {
+                    for (auto &goal : goals)
+                    {
+                        if (x == goal->getX() && y == goal->getY())
+                        {
+                            hasConflict = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+        } while (hasConflict);
+
+        wall->setXandY(x, y);
+
+        walls.push_back(wall);
+    }
+
     this->walls = walls;
 
     // Initialize the render module
