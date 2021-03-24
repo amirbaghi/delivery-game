@@ -20,6 +20,10 @@ void CommandStream::addToResolvedCommands(Command *command)
 
 Command *CommandStream::popRecentPendingCommand()
 {
+    if (this->pending_commands.empty())
+    {
+        return nullptr;
+    }
     Command *c = this->pending_commands.front();
     this->pending_commands.pop();
 
@@ -28,6 +32,10 @@ Command *CommandStream::popRecentPendingCommand()
 
 Command *CommandStream::popRecentResolvedCommand()
 {
+    if (this->resolved_commands.empty())
+    {
+        return nullptr;
+    }
     Command *c = this->resolved_commands.top();
     this->resolved_commands.pop();
     return c;

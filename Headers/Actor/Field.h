@@ -13,8 +13,10 @@ public:
     // Set Width and Height
     void setWidthAndHeight(int width, int height);
 
-    // Set a character in the string sequence at x and y
-    void setCharacterAtXandY(int x, int y, char character);
+    // Width Getter
+    int getWidth();
+    // Height Getter
+    int getHeight();
 
     // Load, Update, Render
     void load(clock_t time);
@@ -24,9 +26,6 @@ public:
 private:
     // The Width and Height of the Ground
     int width, height;
-
-    // Field String Sequence (for printing to console)
-    std::vector<std::vector<char>> fieldString;
 };
 
 #endif

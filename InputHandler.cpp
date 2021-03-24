@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Headers/InputHandler/InputHandler.h"
+#include "Headers/Utils.h"
 #include "Headers/Game/Game.h"
 #include "Headers/Command/MoveCommand.h"
 #include "Headers/Command/UndoCommand.h"
@@ -10,17 +11,17 @@ InputHandler::InputHandler(GameComponent *parent) : GameComponent(parent)
 
 InputHandler::~InputHandler()
 {
-    
 }
 
 Command *InputHandler::getInput()
 {
     char c;
-    std::cin >> c;
+    c = Utils::getch();
 
     // If exit button is pushed
     if (c == 'q' | c == 'Q')
     {
+        system("clear");
         exit(0);
     }
 
@@ -31,31 +32,41 @@ Command *InputHandler::getInput()
     }
 
     // If it's a move command or a not supported key
-    MoveCommand* command;
-    switch (c)
+    MoveCommand *command;
+
+    // Check for arrow keys
+    if (c == '\033')
     {
-    case KEY_UP:
-        command = new MoveCommand();
-        command->setDirection(UP);
-        return command;
-        break;
-    case KEY_DOWN:
-        command = new MoveCommand();
-        command->setDirection(DOWN);
-        return command;
-        break;
-    case KEY_LEFT:
-        command = new MoveCommand();
-        command->setDirection(LEFT);
-        return command;
-        break;
-    case KEY_RIGHT:
-        command = new MoveCommand();
-        command->setDirection(RIGHT);
-        return command;
-        break;
-    default:
-        return nullptr;
-        break;
+
+        c = Utils::getch();
+        c = Utils::getch();
+
+        switch (c)
+        {
+        case KEY_UP:
+            command = new MoveCommand();
+            command->setDirection(UP);
+            return command;
+            break;
+        case KEY_DOWN:
+            command = new MoveCommand();
+            command->setDirection(DOWN);
+            return command;
+            break;
+        case KEY_LEFT:
+            command = new MoveCommand();
+            command->setDirection(LEFT);
+            return command;
+            break;
+        case KEY_RIGHT:
+            command = new MoveCommand();
+            command->setDirection(RIGHT);
+            return command;
+            break;
+        default:
+            return nullptr;
+            break;
+        }
     }
+    return nullptr;
 }

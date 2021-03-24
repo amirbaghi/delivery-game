@@ -1,4 +1,5 @@
 #include "Headers/Game/Game.h"
+#include <iostream>
 
 Game::Game() : GameComponent(nullptr)
 {
@@ -46,7 +47,7 @@ Field *Game::getField()
     return this->field;
 }
 
-void Game::mainLoop()
+void Game::initGame()
 {
     // Setting the start time of the game
     startTime = clock();
@@ -64,59 +65,59 @@ void Game::mainLoop()
     height = 60;
     field->setWidthAndHeight(width, height);
 
-    avatar = new Avatar(this, startTime, 'X');
-    avatar->setCurrentXandY(10, 30);
+    std::srand((unsigned int)std::time(NULL));
+    auto randDirection = 0 + (std::rand() % (3 - 0 + 1));
+    int x, y;
 
+    avatar = new Avatar(this, startTime, 'X');
+    // Setting a random x and y for the character
+    x = 2 + (std::rand() % ((width - 1) - 2 + 1));
+    y = 2 + (std::rand() % ((height - 1) - 2 + 1));
+    avatar->setCurrentXandY(x, y);
+
+    // Initialize the obstacles with random coordinates
     std::vector<Obstacle *> obstacles;
 
-    Obstacle *obs = new Obstacle(this, startTime, '#');
-    obs->setXandY(12, 50);
-    obstacles.push_back(obs);
+    for (int i = 0; i < 6; i++)
+    {
+        Obstacle *obs = new Obstacle(this, startTime, '#');
 
-    obs = new Obstacle(this, startTime, '#');
-    obs->setXandY(15, 45);
-    obstacles.push_back(obs);
+        // Generating random coords for the obstacle and checking so that they're not equal to avatar's coords
+        do
+        {
+            x = 2 + (std::rand() % ((width - 1) - 2 + 1));
+            y = 2 + (std::rand() % ((height - 1) - 2 + 1));
 
-    obs = new Obstacle(this, startTime, '#');
-    obs->setXandY(15, 38);
-    obstacles.push_back(obs);
+        } while (x == avatar->getCurrentX() && y == avatar->getCurrentY());
 
-    obs = new Obstacle(this, startTime, '#');
-    obs->setXandY(9, 10);
-    obstacles.push_back(obs);
-
-    obs = new Obstacle(this, startTime, '#');
-    obs->setXandY(18, 22);
-    obstacles.push_back(obs);
-
-    obs = new Obstacle(this, startTime, '#');
-    obs->setXandY(19, 32);
-    obstacles.push_back(obs);
+        obs->setXandY(x, y);
+        obstacles.push_back(obs);
+    }
 
     this->obstacles = obstacles;
 
-
+    // Initialize the walls
     std::vector<Wall *> walls;
-    
-    for (int i = 0 ; i < width ; i++)
-    {
-        Wall* wall1 = new Wall(this, startTime, '@');
-        Wall* wall2 = new Wall(this, startTime, '@');
 
-        wall1->setXandY(i, 0);
-        wall2->setXandY(i, height - 1);
+    for (int i = 0; i < width; i++)
+    {
+        Wall *wall1 = new Wall(this, startTime, '@');
+        Wall *wall2 = new Wall(this, startTime, '@');
+
+        wall1->setXandY(i + 1, 1);
+        wall2->setXandY(i + 1, height);
 
         walls.push_back(wall1);
         walls.push_back(wall2);
     }
 
-    for (int i = 0 ; i < height ; i++)
+    for (int i = 0; i < height; i++)
     {
-        Wall* wall1 = new Wall(this, startTime, '@');
-        Wall* wall2 = new Wall(this, startTime, '@');
+        Wall *wall1 = new Wall(this, startTime, '@');
+        Wall *wall2 = new Wall(this, startTime, '@');
 
-        wall1->setXandY(0, i);
-        wall2->setXandY(width - 1, i);
+        wall1->setXandY(1, i + 1);
+        wall2->setXandY(width, i + 1);
 
         walls.push_back(wall1);
         walls.push_back(wall2);
@@ -124,10 +125,82 @@ void Game::mainLoop()
 
     this->walls = walls;
 
+    // Initialize the render module
+    renderModule->initRender();
+}
 
-    this->field->load(startTime);
+void Game::mainLoop()
+{
+    // Initialize the game
+    initGame();
 
+    // Main Game Loop
+    do
+    {
+        // GAME LOGIC
 
-    this->renderModule->render(clock());
+        // Get command from user
+        Command *userCommand = inputHandler->getInput();
 
+        // Checking if the command entered is valid
+        if (userCommand != nullptr)
+        {
+            // Add the command to the pending commands in the command stream
+            commandStream->addToPendingCommands(userCommand);
+
+            // Dequeue a command out of the command stream
+            Command *currentCommand = commandStream->popRecentPendingCommand();
+
+            // Check if it's an undo command
+            if (dynamic_cast<UndoCommand *>(currentCommand) != nullptr)
+            {
+                // Pop the most recent resolved command from the command stream and invert it (Undo it)
+                Command *tempCommand = commandStream->popRecentResolvedCommand();
+
+                // Check if there was a resolved command and the command stream wasn't empty
+                if (tempCommand != nullptr)
+                {
+                    MoveCommand* moveCommand = dynamic_cast<MoveCommand *>(tempCommand);
+
+                    // Inverting the move command
+                    switch (moveCommand->getDirection())
+                    {
+                    case UP:
+                        moveCommand->setDirection(DOWN);
+                        break;
+                    case DOWN:
+                        moveCommand->setDirection(UP);
+                        break;
+                    case LEFT:
+                        moveCommand->setDirection(RIGHT);
+                        break;
+                    case RIGHT:
+                        moveCommand->setDirection(LEFT);
+                        break;
+                    default:
+                        break;
+                    }
+
+                    physicsModule->applyPhysics(moveCommand);
+                }
+            }
+            // It's a Move Command
+            else
+            {
+                MoveCommand* moveCommand = dynamic_cast<MoveCommand *>(currentCommand);
+
+                // Push the move command to the resolved command stream
+                commandStream->addToResolvedCommands(currentCommand);
+
+                physicsModule->applyPhysics(moveCommand);
+            }
+        }
+
+        // Update the current frame buffer
+        renderModule->updateFrameBuffer();
+
+        // Render the new frame
+        renderModule->render();
+
+    } while (true);
 }

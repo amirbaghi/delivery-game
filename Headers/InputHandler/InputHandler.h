@@ -4,10 +4,10 @@
 #include "../GameComponent.h"
 #include "../Command/Command.h"
 
-#define KEY_UP 72
-#define KEY_DOWN 80
-#define KEY_LEFT 77
-#define KEY_RIGHT 75
+#define KEY_UP 65
+#define KEY_DOWN 66
+#define KEY_LEFT 68
+#define KEY_RIGHT 67
 
 
 class InputHandler: public GameComponent

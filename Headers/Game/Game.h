@@ -11,6 +11,8 @@
 #include "../Actor/Wall.h"
 #include "../Physics/Physics.h"
 #include "../Render/Render.h"
+#include "../Command/UndoCommand.h"
+#include "../Command/MoveCommand.h"
 
 class Game : public GameComponent
 {
@@ -29,6 +31,9 @@ public:
 
     // Field Getter
     Field* getField();
+
+    // Initialize the game
+    void initGame();
 
     // Main game loop
     void mainLoop();

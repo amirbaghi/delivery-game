@@ -9,8 +9,21 @@ public:
     Render(GameComponent *parent);
     ~Render();
 
-    // Method for Rendering the game
-    void render(clock_t time);
+    // Initialize the render module
+    void initRender();
+
+    // Update the Current Frame Buffer
+    void updateFrameBuffer();
+
+    // Render the current frame
+    void render();
+
+private:
+    // Current Frame Buffer
+    std::vector<std::vector<char>> currentFrameBuffer;
+
+    // Previous Frame Buffer
+    std::vector<std::vector<char>> previousFrameBuffer;
 };
 
 #endif
