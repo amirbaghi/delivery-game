@@ -18,10 +18,6 @@ public:
     // Height Getter
     int getHeight();
 
-    // Load, Update, Render
-    void load(clock_t time);
-    void update(clock_t time);
-    void render(clock_t time);
 
 private:
     // The Width and Height of the Ground

@@ -16,21 +16,6 @@ void Obstacle::setXandY(int x, int y)
     this->y = y;
 }
 
-void Obstacle::load(clock_t time)
-{
-
-}
-
-void Obstacle::update(clock_t time)
-{
-
-}
-
-void Obstacle::render(clock_t time)
-{
-    putchar(this->character);
-}
-
 int Obstacle::getX()
 {
     return this->x;

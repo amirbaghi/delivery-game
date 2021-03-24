@@ -25,15 +25,3 @@ int Field::getHeight()
 {
     return this->height;
 }
-
-void Field::load(clock_t time)
-{
-}
-
-void Field::update(clock_t time)
-{
-}
-
-void Field::render(clock_t time)
-{
-}

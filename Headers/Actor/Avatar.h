@@ -17,11 +17,6 @@ public:
     // Get current y
     int getCurrentY();
 
-    // Load, Update, Render
-    void load(clock_t time);
-    void update(clock_t time);
-    void render(clock_t time);
-
 private:
     // Current x and y
     int current_x, current_y;

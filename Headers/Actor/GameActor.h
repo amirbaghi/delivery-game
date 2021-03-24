@@ -16,11 +16,6 @@ public:
     // Character Getter
     char getCharacter();
 
-    // Load, Update, Render Methods
-    void virtual load(clock_t time) = 0;
-    void virtual update(clock_t time) = 0;
-    void virtual render(clock_t time) = 0;
-
 protected:
     // Creation Time
     clock_t creation_time;

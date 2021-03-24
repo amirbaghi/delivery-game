@@ -17,21 +17,6 @@ void Wall::setXandY(int x, int y)
     this->y = y;
 }
 
-void Wall::load(clock_t time)
-{
-
-}
-
-void Wall::update(clock_t time)
-{
-
-}
-
-void Wall::render(clock_t time)
-{
-    putchar(this->character);
-}
-
 int Wall::getX()
 {
     return this->x;

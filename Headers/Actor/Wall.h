@@ -18,10 +18,6 @@ public:
     // Get Y
     int getY();
 
-    // Load, Update, Render
-    void load(clock_t time);
-    void update(clock_t time);
-    void render(clock_t time);
 
 private:
     // X and Y coordiates
