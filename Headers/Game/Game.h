@@ -33,6 +33,9 @@ public:
     // Field Getter
     Field* getField();
 
+    // Creation Time Getter
+    clock_t getCreationTime();
+
     // Initialize the game
     void initGame();
 

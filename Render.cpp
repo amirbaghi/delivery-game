@@ -49,11 +49,20 @@ void Render::initRender()
 
     // Rendering the first frame
     system("setterm -cursor off");
-    system("clear");
+
+    // Cleaning the console (as a new screen)
+    std::cout << "\033[H\033[J";
+
+    // Resizing the terminal window
+    std::cout << "\e[8;30;70t";
 
     char avatarChar = avatar->getCharacter();
     char obsChar = obstacles.front()->getCharacter();
     char wallChar = walls.front()->getCharacter();
+
+    isLogoFullyLit = true;
+
+    printLogo();
 
     for (size_t i = 0; i < currentFrameBuffer.size(); i++)
     {
@@ -62,15 +71,15 @@ void Render::initRender()
             // Set the console color appropriately
             if (currentFrameBuffer[i][j] == avatarChar)
             {
-                std::cout << BRIGHTRED;
+                std::cout << avatar->getColor();
             }
             else if (currentFrameBuffer[i][j] == obsChar)
             {
-                std::cout << BRIGHTYELLOW;
+                std::cout << obstacles.front()->getColor();
             }
             else if (currentFrameBuffer[i][j] == wallChar)
             {
-                std::cout << BOLDYELLOW;
+                std::cout << walls.front()->getColor();
             }
 
             std::cout << currentFrameBuffer[i][j];
@@ -79,6 +88,38 @@ void Render::initRender()
             std::cout << RESET;
         }
         std::cout << "\n";
+    }
+
+    std::cout << "Use " << BRIGHTRED << "ARROW KEYS" << RESET << " to move, " << BRIGHTRED << "U" << RESET << " to undo a move, " BRIGHTRED << "Q" << RESET << " to exit.\n";
+    std::cout << "Deliver each " << obstacles.front()->getColor() << obsChar << RESET << " to a " << BRIGHTCYAN << "BLAH" << RESET << " to win!";
+}
+
+void Render::printLogo()
+{
+    // If the logo should be lit completely
+    if (isLogoFullyLit)
+    {
+        std::cout << BRIGHTYELLOW << "____     _ _    __                  _ \n"
+                                  << "|  _  \\   | (_)                    | |\n"
+                                  << "| | | |___| |___   _____ _ __ _   _| |\n"
+                                  << "| | | / _ \\ | \\ \\ / / _ \\ '__| | | | |\n"
+                                  << "| |/ /  __/ | |\\ V /  __/ |  | |_| |_|\n"
+                                  << "|___/ \\___|_|_| \\_/ \\___|_|   \\__, (_)\n"
+                                  << "                               __/ |  \n"
+                                  << "                              |___/   \n"
+                                  << RESET;
+    }
+    else
+    {
+        std::cout << RESET << "____     _ " << BRIGHTYELLOW << "_" << RESET << "    __                  _ \n"
+                           << "|  _  \\   " << BRIGHTYELLOW << "| (_)" << RESET << "                    | |\n"
+                           << "| | | |___" << BRIGHTYELLOW << "| |___   _____" << RESET << " _ __ _   _| |\n"
+                           << "| | | / _ \\ " << BRIGHTYELLOW << "| \\ \\ / / _ \\" << RESET << " '__| | | | |\n"
+                           << "| |/ /  __/ " << BRIGHTYELLOW << "| |\\ V /  __/" << RESET << " |  | |_| |_|\n"
+                           << "|___/ \\___" << BRIGHTYELLOW << "|_|_| \\_/ \\___|" << RESET << "_|   \\__, (_)\n"
+                           << "                               __/ |  \n"
+                           << "                              |___/   \n"
+                           << RESET;
     }
 }
 
@@ -117,13 +158,26 @@ void Render::updateFrameBuffer()
     }
 }
 
-void Render::render()
+void Render::render(clock_t time)
 {
     Game *game = dynamic_cast<Game *>(parent_component);
 
     char avatarChar = game->getAvatar()->getCharacter();
     char obsChar = game->getObstacles().front()->getCharacter();
     char wallChar = game->getWalls().front()->getCharacter();
+
+    // See if the logo should blink (The logo blinks every 2 seconds)
+    int diffTime = float(time - game->getCreationTime()) / CLOCKS_PER_SEC;
+    if (diffTime % 2 == 0)
+    {
+        // Invert the Logo's Lighting Status
+        isLogoFullyLit = !isLogoFullyLit;
+
+        // Move the cursor to the top
+        std::cout << "\033[" << 0 << ";" << 0 << "H";
+
+        printLogo();
+    }
 
     // Render the current frame using a double buffer technique
     for (size_t i = 0; i < currentFrameBuffer.size(); i++)
@@ -133,7 +187,7 @@ void Render::render()
             // Only render the character if it's different than the previous frame
             if (currentFrameBuffer[i][j] != previousFrameBuffer[i][j])
             {
-                std::cout << "\033[" << i + 1 << ";" << j + 1 << "H";
+                std::cout << "\033[" << i + 1 + 8 << ";" << j + 1 << "H";
 
                 // Set the console color appropriately
                 if (currentFrameBuffer[i][j] == avatarChar)

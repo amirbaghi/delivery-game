@@ -21,6 +21,11 @@ char GameActor::getCharacter()
     return this->character;
 }
 
+std::string GameActor::getColor()
+{
+    return this->color;
+}
+
 void GameActor::setCharacter(char character)
 {
     this->character = character;

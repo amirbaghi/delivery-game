@@ -143,6 +143,11 @@ void Game::initGame()
     renderModule->initRender();
 }
 
+clock_t Game::getCreationTime()
+{
+    return this->startTime;
+}
+
 void Game::mainLoop()
 {
     // Initialize the game
@@ -220,7 +225,7 @@ void Game::mainLoop()
         renderModule->updateFrameBuffer();
 
         // Render the new frame
-        renderModule->render();
+        renderModule->render(clock());
 
     } while (true);
 }

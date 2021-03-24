@@ -20,6 +20,9 @@ public:
     // Character Getter
     char getCharacter();
 
+    // Color Getter
+    std::string getColor();
+
 protected:
     // Creation Time
     clock_t creation_time;

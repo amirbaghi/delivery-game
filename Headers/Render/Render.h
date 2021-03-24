@@ -15,8 +15,11 @@ public:
     // Update the Current Frame Buffer
     void updateFrameBuffer();
 
+    // Print the logo
+    void printLogo();
+
     // Render the current frame
-    void render();
+    void render(clock_t time);
 
 private:
     // Current Frame Buffer
@@ -24,6 +27,10 @@ private:
 
     // Previous Frame Buffer
     std::vector<std::vector<char>> previousFrameBuffer;
+
+    // Logo Lighting Status
+    bool isLogoFullyLit;
+
 };
 
 #endif
