@@ -23,8 +23,8 @@ public:
     ~Game();
 
     // Avatar Getter
-    Avatar* getAvatar();
-    
+    Avatar *getAvatar();
+
     // Obstacles Getter
     std::vector<Obstacle *> getObstacles();
 
@@ -32,13 +32,19 @@ public:
     std::vector<Wall *> getWalls();
 
     // Field Getter
-    Field* getField();
+    Field *getField();
 
     // Goals getter
     std::vector<Goal *> getGoals();
 
     // Creation Time Getter
     clock_t getCreationTime();
+
+    // Score getter
+    int getScore();
+
+    // Score setter
+    void setScore(int score);
 
     // Initialize the game
     void initGame();
@@ -79,7 +85,9 @@ private:
 
     // Start Time
     clock_t startTime;
-};
 
+    // Score
+    int score;
+};
 
 #endif

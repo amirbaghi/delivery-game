@@ -92,6 +92,7 @@ void Physics::applyPhysics(Command *command)
                 if (obstacle->getX() == goal->getX() && obstacle->getY() == goal->getY())
                 {
                     obstacle->setIsInPlace(true);
+                    game->setScore(game->getScore() + 1);
                 }
             }
         }
@@ -164,6 +165,7 @@ void Physics::applyPhysics(Command *command)
                 if (obstacle->getX() == goal->getX() && obstacle->getY() == goal->getY())
                 {
                     obstacle->setIsInPlace(true);
+                    game->setScore(game->getScore() + 1);
                 }
             }
         }
@@ -235,6 +237,7 @@ void Physics::applyPhysics(Command *command)
                 if (obstacle->getX() == goal->getX() && obstacle->getY() == goal->getY())
                 {
                     obstacle->setIsInPlace(true);
+                    game->setScore(game->getScore() + 1);
                 }
             }
         }
@@ -307,6 +310,7 @@ void Physics::applyPhysics(Command *command)
                 if (obstacle->getX() == goal->getX() && obstacle->getY() == goal->getY())
                 {
                     obstacle->setIsInPlace(true);
+                    game->setScore(game->getScore() + 1);
                 }
             }
         }

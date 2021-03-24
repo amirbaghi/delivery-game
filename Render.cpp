@@ -61,7 +61,7 @@ void Render::initRender()
     std::cout << "\033[H\033[J";
 
     // Resizing the terminal window
-    std::cout << "\e[8;30;70t";
+    std::cout << "\e[8;35;70t";
 
     char avatarChar = avatar->getCharacter();
     char obsChar = obstacles.front()->getCharacter();
@@ -115,7 +115,8 @@ void Render::initRender()
     }
 
     std::cout << "Use " << BRIGHTRED << "ARROW KEYS" << RESET << " to move, " << BRIGHTRED << "U" << RESET << " to undo a move, " BRIGHTRED << "Q" << RESET << " to exit.\n";
-    std::cout << "Deliver each " << obstacles.front()->getColor() << obsChar << RESET << " to a " << goals.front()->getColor() << goalChar << RESET << " to win!";
+    std::cout << "Deliver each " << obstacles.front()->getColor() << obsChar << RESET << " to a " << goals.front()->getColor() << goalChar << RESET << " to win!\n";
+    std::cout << "So far you have delivered " << BRIGHTGREEN << game->getScore() << RESET << " out of " << game->getGoals().size() << " " << BRIGHTYELLOW << obsChar << RESET << "s.";
 }
 
 void Render::printLogo()
@@ -181,13 +182,12 @@ void Render::updateFrameBuffer()
     {
         currentFrameBuffer[goal->getX() - 1][goal->getY() - 1] = goal->getCharacter();
     }
-    
+
     // Setting the Obstacles
     for (auto &obstacle : obstacles)
     {
         currentFrameBuffer[obstacle->getX() - 1][obstacle->getY() - 1] = obstacle->getCharacter();
     }
-
 }
 
 void Render::render(clock_t time)
@@ -199,18 +199,13 @@ void Render::render(clock_t time)
     char wallChar = game->getWalls().front()->getCharacter();
     char goalChar = game->getGoals().front()->getCharacter();
 
-    // See if the logo should blink (The logo blinks every 2 seconds)
-    int diffTime = float(time - game->getCreationTime()) / CLOCKS_PER_SEC;
-    if (diffTime % 2 == 0)
-    {
-        // Invert the Logo's Lighting Status
-        isLogoFullyLit = !isLogoFullyLit;
+    // Invert the Logo's Lighting Status
+    isLogoFullyLit = !isLogoFullyLit;
 
-        // Move the cursor to the top
-        std::cout << "\033[" << 0 << ";" << 0 << "H";
+    // Move the cursor to the top
+    std::cout << "\033[" << 0 << ";" << 0 << "H";
 
-        printLogo();
-    }
+    printLogo();
 
     // Render the current frame using a double buffer technique
     for (size_t i = 0; i < currentFrameBuffer.size(); i++)
@@ -259,6 +254,10 @@ void Render::render(clock_t time)
             }
         }
     }
+
+    // Printing the score
+    std::cout << "\033[" << game->getField()->getWidth() + 11 << ";" << 0 << "H";
+    std::cout << "So far you have delivered " << BRIGHTGREEN << game->getScore() << RESET << " out of " << game->getGoals().size() << " " << BRIGHTYELLOW << obsChar << RESET << "s.";
 
     // Set previous buffer as the current buffer
     previousFrameBuffer = currentFrameBuffer;

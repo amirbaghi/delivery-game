@@ -88,6 +88,9 @@ void Game::initGame()
     avatar->setColor(BRIGHTRED);
     avatar->setCurrentXandY(x, y);
 
+    // Initialize the score
+    this->setScore(0);
+
     // Initialize the obstacles with random coordinates
     std::vector<Obstacle *> obstacles;
 
@@ -101,14 +104,14 @@ void Game::initGame()
         // Generating random coords for the obstacle and checking so that they're not equal to avatar's coords
         do
         {
-            x = 3 + (std::rand() % ((width - 2) - 2 + 1));
-            y = 3 + (std::rand() % ((height - 2) - 2 + 1));
+            x = 3 + (std::rand() % ((width - 2) - 3 + 1));
+            y = 3 + (std::rand() % ((height - 2) - 3 + 1));
 
         } while (x == avatar->getCurrentX() && y == avatar->getCurrentY());
 
         obs->setXandY(x, y);
         obs->setIsInPlace(false);
-        
+
         obstacles.push_back(obs);
     }
 
@@ -203,6 +206,16 @@ clock_t Game::getCreationTime()
     return this->startTime;
 }
 
+int Game::getScore()
+{
+    return this->score;
+}
+
+void Game::setScore(int score)
+{
+    this->score = score;
+}
+
 void Game::mainLoop()
 {
     // Initialize the game
@@ -212,6 +225,15 @@ void Game::mainLoop()
     do
     {
         // GAME LOGIC
+
+        // Check if the game is over
+        if (this->score == goals.size())
+        {
+            std::cout << "\033[H\033[J";
+            std::cout << BRIGHTRED << "CONGRATS!" << RESET << " You delivered all the " << obstacles.front()->getColor() << obstacles.front()->getCharacter() << RESET << "s !\nPress any key to exit.";
+            char c = Utils::getch();
+            break;
+        }
 
         // Get command from user
         Command *userCommand = inputHandler->getInput();
