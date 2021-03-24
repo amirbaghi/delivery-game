@@ -1,4 +1,5 @@
 #include "Headers/Game/Game.h"
+#include "Headers/Utils.h"
 #include <iostream>
 
 Game::Game() : GameComponent(nullptr)
@@ -73,6 +74,8 @@ void Game::initGame()
     // Setting a random x and y for the character
     x = 2 + (std::rand() % ((width - 1) - 2 + 1));
     y = 2 + (std::rand() % ((height - 1) - 2 + 1));
+    // Set the avatar color
+    avatar->setColor(BRIGHTRED);
     avatar->setCurrentXandY(x, y);
 
     // Initialize the obstacles with random coordinates
@@ -81,6 +84,9 @@ void Game::initGame()
     for (int i = 0; i < 6; i++)
     {
         Obstacle *obs = new Obstacle(this, startTime, '#');
+
+        // Set obstacle color
+        obs->setColor(BRIGHTYELLOW);
 
         // Generating random coords for the obstacle and checking so that they're not equal to avatar's coords
         do
@@ -104,6 +110,10 @@ void Game::initGame()
         Wall *wall1 = new Wall(this, startTime, '@');
         Wall *wall2 = new Wall(this, startTime, '@');
 
+        // Set wall color
+        wall1->setColor(BOLDYELLOW);
+        wall2->setColor(BOLDYELLOW);
+
         wall1->setXandY(i + 1, 1);
         wall2->setXandY(i + 1, height);
 
@@ -115,6 +125,10 @@ void Game::initGame()
     {
         Wall *wall1 = new Wall(this, startTime, '@');
         Wall *wall2 = new Wall(this, startTime, '@');
+
+        // Set wall color
+        wall1->setColor(BOLDYELLOW);
+        wall2->setColor(BOLDYELLOW);
 
         wall1->setXandY(1, i + 1);
         wall2->setXandY(width, i + 1);
@@ -160,7 +174,7 @@ void Game::mainLoop()
                 // Check if there was a resolved command and the command stream wasn't empty
                 if (tempCommand != nullptr)
                 {
-                    MoveCommand* moveCommand = dynamic_cast<MoveCommand *>(tempCommand);
+                    MoveCommand *moveCommand = dynamic_cast<MoveCommand *>(tempCommand);
 
                     // Inverting the move command
                     switch (moveCommand->getDirection())
@@ -185,7 +199,7 @@ void Game::mainLoop()
                 }
             }
             // If it's an exit command
-            else if (dynamic_cast<ExitCommand*>(currentCommand) != nullptr)
+            else if (dynamic_cast<ExitCommand *>(currentCommand) != nullptr)
             {
                 system("clear");
                 exit(0);
@@ -193,7 +207,7 @@ void Game::mainLoop()
             // It's a Move Command
             else
             {
-                MoveCommand* moveCommand = dynamic_cast<MoveCommand *>(currentCommand);
+                MoveCommand *moveCommand = dynamic_cast<MoveCommand *>(currentCommand);
 
                 // Push the move command to the resolved command stream
                 commandStream->addToResolvedCommands(currentCommand);

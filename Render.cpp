@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Headers/Game/Game.h"
 #include "Headers/Render/Render.h"
+#include "Headers/Utils.h"
 
 Render::Render(GameComponent *parent) : GameComponent(parent)
 {
@@ -50,11 +51,32 @@ void Render::initRender()
     system("setterm -cursor off");
     system("clear");
 
+    char avatarChar = avatar->getCharacter();
+    char obsChar = obstacles.front()->getCharacter();
+    char wallChar = walls.front()->getCharacter();
+
     for (size_t i = 0; i < currentFrameBuffer.size(); i++)
     {
         for (size_t j = 0; j < currentFrameBuffer[i].size(); j++)
         {
+            // Set the console color appropriately
+            if (currentFrameBuffer[i][j] == avatarChar)
+            {
+                std::cout << BRIGHTRED;
+            }
+            else if (currentFrameBuffer[i][j] == obsChar)
+            {
+                std::cout << BRIGHTYELLOW;
+            }
+            else if (currentFrameBuffer[i][j] == wallChar)
+            {
+                std::cout << BOLDYELLOW;
+            }
+
             std::cout << currentFrameBuffer[i][j];
+
+            // Reset the color
+            std::cout << RESET;
         }
         std::cout << "\n";
     }
@@ -97,6 +119,12 @@ void Render::updateFrameBuffer()
 
 void Render::render()
 {
+    Game *game = dynamic_cast<Game *>(parent_component);
+
+    char avatarChar = game->getAvatar()->getCharacter();
+    char obsChar = game->getObstacles().front()->getCharacter();
+    char wallChar = game->getWalls().front()->getCharacter();
+
     // Render the current frame using a double buffer technique
     for (size_t i = 0; i < currentFrameBuffer.size(); i++)
     {
@@ -106,7 +134,25 @@ void Render::render()
             if (currentFrameBuffer[i][j] != previousFrameBuffer[i][j])
             {
                 std::cout << "\033[" << i + 1 << ";" << j + 1 << "H";
+
+                // Set the console color appropriately
+                if (currentFrameBuffer[i][j] == avatarChar)
+                {
+                    std::cout << BRIGHTRED;
+                }
+                else if (currentFrameBuffer[i][j] == obsChar)
+                {
+                    std::cout << BRIGHTYELLOW;
+                }
+                else if (currentFrameBuffer[i][j] == wallChar)
+                {
+                    std::cout << BOLDYELLOW;
+                }
+
                 std::cout << currentFrameBuffer[i][j];
+
+                // Reset the color
+                std::cout << RESET;
             }
         }
     }

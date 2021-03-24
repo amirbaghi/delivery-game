@@ -3,6 +3,7 @@
 
 #include "../GameComponent.h"
 #include <time.h>
+#include <iostream>
 
 class GameActor : public GameComponent
 {
@@ -13,6 +14,9 @@ public:
     // Character Setter
     void setCharacter(char character);
 
+    // Color Code Setter
+    void setColor(std::string color);
+
     // Character Getter
     char getCharacter();
 
@@ -21,6 +25,8 @@ protected:
     clock_t creation_time;
     // Game Actor's Character
     char character;
+    // Game Actor's Color Code
+    std::string color;
 };
 
 #endif
