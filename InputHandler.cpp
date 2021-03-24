@@ -4,6 +4,7 @@
 #include "Headers/Game/Game.h"
 #include "Headers/Command/MoveCommand.h"
 #include "Headers/Command/UndoCommand.h"
+#include "Headers/Command/ExitCommand.h"
 
 InputHandler::InputHandler(GameComponent *parent) : GameComponent(parent)
 {
@@ -21,8 +22,7 @@ Command *InputHandler::getInput()
     // If exit button is pushed
     if (c == 'q' | c == 'Q')
     {
-        system("clear");
-        exit(0);
+        return new ExitCommand();
     }
 
     // If undo button is pushed

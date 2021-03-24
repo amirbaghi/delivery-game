@@ -47,6 +47,7 @@ void Render::initRender()
     previousFrameBuffer = currentFrameBuffer;
 
     // Rendering the first frame
+    system("setterm -cursor off");
     system("clear");
 
     for (size_t i = 0; i < currentFrameBuffer.size(); i++)

@@ -184,6 +184,12 @@ void Game::mainLoop()
                     physicsModule->applyPhysics(moveCommand);
                 }
             }
+            // If it's an exit command
+            else if (dynamic_cast<ExitCommand*>(currentCommand) != nullptr)
+            {
+                system("clear");
+                exit(0);
+            }
             // It's a Move Command
             else
             {

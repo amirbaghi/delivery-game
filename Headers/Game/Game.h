@@ -13,6 +13,7 @@
 #include "../Render/Render.h"
 #include "../Command/UndoCommand.h"
 #include "../Command/MoveCommand.h"
+#include "../Command/ExitCommand.h"
 
 class Game : public GameComponent
 {
