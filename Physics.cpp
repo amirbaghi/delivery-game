@@ -93,6 +93,7 @@ void Physics::applyPhysics(Command *command)
                 {
                     obstacle->setIsInPlace(true);
                     game->setScore(game->getScore() + 1);
+                    break;
                 }
             }
         }
@@ -166,6 +167,7 @@ void Physics::applyPhysics(Command *command)
                 {
                     obstacle->setIsInPlace(true);
                     game->setScore(game->getScore() + 1);
+                    break;
                 }
             }
         }
@@ -238,6 +240,7 @@ void Physics::applyPhysics(Command *command)
                 {
                     obstacle->setIsInPlace(true);
                     game->setScore(game->getScore() + 1);
+                    break;
                 }
             }
         }
@@ -311,6 +314,7 @@ void Physics::applyPhysics(Command *command)
                 {
                     obstacle->setIsInPlace(true);
                     game->setScore(game->getScore() + 1);
+                    break;
                 }
             }
         }

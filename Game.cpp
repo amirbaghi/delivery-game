@@ -101,13 +101,31 @@ void Game::initGame()
         // Set obstacle color
         obs->setColor(BRIGHTYELLOW);
 
-        // Generating random coords for the obstacle and checking so that they're not equal to avatar's coords
+        // Generating random coords for the obstacle and checking so that they're not equal to avatar's coords or another obstacle's
+        bool hasConflict;
         do
         {
+            hasConflict = false;
             x = 3 + (std::rand() % ((width - 2) - 3 + 1));
             y = 3 + (std::rand() % ((height - 2) - 3 + 1));
 
-        } while (x == avatar->getCurrentX() && y == avatar->getCurrentY());
+            if (x == avatar->getCurrentX() && y == avatar->getCurrentY())
+            {
+                hasConflict = true;
+            }
+            else
+            {
+                for (auto &obs : obstacles)
+                {
+                    if (x == obs->getX() && y == obs->getY())
+                    {
+                        hasConflict = true;
+                        break;
+                    }
+                }
+            }
+
+        } while (hasConflict);
 
         obs->setXandY(x, y);
         obs->setIsInPlace(false);
@@ -127,7 +145,7 @@ void Game::initGame()
         // Set Goal color
         goal->setColor(BRIGHTCYAN);
 
-        // Generating random coords for the goal and checking so that they're not equal to avatar or another obstacle's coords
+        // Generating random coords for the goal and checking so that they're not equal to avatar or another obstacle/goal's coords
         bool hasConflict;
         do
         {
@@ -147,6 +165,18 @@ void Game::initGame()
                     {
                         hasConflict = true;
                         break;
+                    }
+                }
+
+                if (!hasConflict)
+                {
+                    for (auto &goal : goals)
+                    {
+                        if (x == goal->getX() && y == goal->getY())
+                        {
+                            hasConflict = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -231,6 +261,18 @@ void Game::initGame()
                         {
                             hasConflict = true;
                             break;
+                        }
+                    }
+
+                    if (!hasConflict)
+                    {
+                        for (auto& wall: walls)
+                        {
+                            if (x == wall->getX() && y == wall->getY())
+                            {
+                                hasConflict = true;
+                                break;
+                            }
                         }
                     }
                 }
